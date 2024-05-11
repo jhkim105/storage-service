@@ -1,0 +1,1 @@
+curl -F 'file=@files/test.jpeg' -F 'key=a/b/test.jpeg' -F 'width=1000'  -F 'height=1000' http://localhost:8088

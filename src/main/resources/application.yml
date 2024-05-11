@@ -1,0 +1,21 @@
+server:
+  port: 8088
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+  cloud:
+    aws:
+      credentials:
+        profile.name: team-jhkim
+      region:
+        static: ap-northeast-2
+
+storage:
+  storage-path: @project.basedir@/storage
+  image-magick-path: /opt/homebrew/bin
+  gifsicle-path: /opt/homebrew/bin

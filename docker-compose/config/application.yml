@@ -1,0 +1,13 @@
+server:
+  address: 0.0.0.0
+  port: 8080
+spring:
+  cloud:
+    aws:
+      credentials:
+        profile.name: team-jhkim
+storage:
+  storage-path: /data/storage
+
+logging:
+  config: /application/config/logback-spring.xml

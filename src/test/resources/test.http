@@ -1,0 +1,26 @@
+# curl -F 'file=@files/test.jpeg' -F 'key=a/b/test.jpeg' http://localhost:8088
+POST http://localhost:8088
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="test.jpeg"
+
+< files/test.jpeg
+--WebAppBoundary
+Content-Disposition: form-data; name="key"
+
+a/b/test.jpeg
+--WebAppBoundary--
+
+> {%
+client.global.set("url", response.body.url);
+%}
+###
+
+DELETE {{url}}
+
+###
+
+DELETE http://localhost:8088/a
+
+###

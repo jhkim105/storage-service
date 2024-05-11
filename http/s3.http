@@ -1,0 +1,16 @@
+
+### Upload
+POST http://localhost:8080/s3/jhkim-files/file.txt
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="sample.txt"
+
+< ../storage/sample.txt
+--WebAppBoundary--
+
+### Download
+GET http://localhost:8080/s3/jhkim-files/file.txt
+Accept: application/json
+
+###

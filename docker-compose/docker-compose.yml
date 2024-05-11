@@ -1,0 +1,14 @@
+services:
+
+  storage-service:
+    container_name: "storage-service"
+    image: ghcr.io/jhkim105/storage-service
+    volumes:
+      - data:/data
+      - ./config:/application/config
+
+    ports:
+      - "8080:8080"
+
+volumes:
+  data:
