@@ -6,7 +6,7 @@ services:
     volumes:
       - data:/data
       - ./config:/application/config
-
+      - $HOME/.aws/credentials:/root/.aws/credentials:ro
     ports:
       - "8080:8080"
 
