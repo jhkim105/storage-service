@@ -1,11 +1,10 @@
-package jhkim105.storage.local;
+package jhkim105.storage.service;
 
 
-import jhkim105.storage.StorageService;
-import jhkim105.storage.config.StorageProperties;
-import jhkim105.storage.utils.FileUtils;
-import jhkim105.storage.utils.Gifsicle;
-import jhkim105.storage.utils.ImageMagick;
+import jhkim105.storage.common.config.ServiceProperties;
+import jhkim105.storage.common.utils.FileUtils;
+import jhkim105.storage.common.utils.Gifsicle;
+import jhkim105.storage.common.utils.ImageMagick;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -13,14 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.multipart.MultipartFile;
 
-@Component
 @RequiredArgsConstructor
 public class LocalService implements StorageService {
 
-  private final StorageProperties storageProperties;
+  private final ServiceProperties serviceProperties;
+  private final ResourceLoader resourceLoader;
 
 
   @Override
@@ -105,14 +104,15 @@ public class LocalService implements StorageService {
   }
 
   private String absoluteBucketPath(String bucketName) {
-    return String.format("%s/%s", storageProperties.getStoragePath(), bucketName);
+    return String.format("%s/%s", serviceProperties.getStoragePath(), bucketName);
   }
 
   private String absoluteObjectPath(String bucketName, String key) {
     return String.format("%s/%s", absoluteBucketPath(bucketName), key);
   }
 
-  public void delete(String bucketName, String key) {
+  @Override
+  public void deleteObject(String bucketName, String key) {
     String path = absoluteObjectPath(bucketName, key);
     FileUtils.delete(path);
   }

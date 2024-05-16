@@ -1,4 +1,4 @@
-package jhkim105.storage.local;
+package jhkim105.storage;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,13 +27,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
-class LocalControllerTests {
+class LocalTests {
 
 
   @Autowired
   private MockMvc mockMvc;
 
-  private final static String URI_PREFIX = "local";
   String bucketName = "company01";
   String objectKey = "a/test.jpg";
   String sourceFilePath = "src/test/resources/files/test.jpeg";
@@ -43,7 +43,7 @@ class LocalControllerTests {
     MockMultipartFile multipartFile = new MockMultipartFile( "file", "test.jpg", MediaType.IMAGE_JPEG_VALUE,
         Files.readAllBytes(Paths.get(sourceFilePath)));
 
-    mockMvc.perform(multipart(String.format("/%s/%s/%s", URI_PREFIX, bucketName, objectKey))
+    mockMvc.perform(multipart(String.format("/%s/%s", bucketName, objectKey))
             .file(multipartFile))
         .andDo(print())
         .andExpect(status().isOk())
@@ -55,7 +55,7 @@ class LocalControllerTests {
   void download() throws Exception {
     ResultActions resultActions = mockMvc.perform(
         MockMvcRequestBuilders
-            .get(String.format("/%s/%s/%s", URI_PREFIX, bucketName, objectKey))
+            .get(String.format("/%s/%s", bucketName, objectKey))
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.IMAGE_JPEG));
 
@@ -71,14 +71,14 @@ class LocalControllerTests {
   @Test
   @Order(3)
   void deleteObject() throws Exception {
-    mockMvc.perform(delete(String.format("/%s/%s/%s", URI_PREFIX, bucketName, objectKey)))
+    mockMvc.perform(delete(String.format("/%s/%s", bucketName, objectKey)))
         .andDo(print());
   }
 
   @Test
   @Order(4)
   void deleteBucket() throws Exception  {
-    mockMvc.perform(delete(String.format("/%s/%s", URI_PREFIX, bucketName)))
+    mockMvc.perform(delete(String.format("/%s", bucketName)))
         .andDo(print());
   }
 }

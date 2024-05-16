@@ -1,6 +1,6 @@
-package jhkim105.storage.utils;
+package jhkim105.storage.common.utils;
 
-import jhkim105.storage.config.SystemPropertiesConfig;
+import jhkim105.storage.common.config.SystemPropertiesConfig;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

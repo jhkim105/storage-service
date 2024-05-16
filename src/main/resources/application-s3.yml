@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8088
 spring:
   mvc:
     pathmatch:
@@ -8,8 +8,14 @@ spring:
     multipart:
       max-file-size: -1
       max-request-size: -1
-service:
+  cloud:
+    aws:
+      credentials:
+        profile.name: team-jhkim
+      region:
+        static: ap-northeast-2
+
+storage:
   image-magick-path: /opt/homebrew/bin
   gifsicle-path: /opt/homebrew/bin
-  storage-type: LOCAL
-  storage-path: @project.basedir@/storage
+  storage-type: S3

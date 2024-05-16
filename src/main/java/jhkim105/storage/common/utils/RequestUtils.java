@@ -1,4 +1,4 @@
-package jhkim105.storage.utils;
+package jhkim105.storage.common.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;

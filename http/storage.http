@@ -1,6 +1,6 @@
 
 ### Upload
-POST http://localhost:8080/s3/jhkim-files/file.txt
+POST http://localhost:8080/jhkim-files/file.txt
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
@@ -9,8 +9,13 @@ Content-Disposition: form-data; name="file"; filename="sample.txt"
 < ../storage/sample.txt
 --WebAppBoundary--
 
+> {%
+  client.global.set("downloadUrl", response.body.url);
+
+ %}
+
 ### Download
-GET http://localhost:8080/s3/jhkim-files/file.txt
+GET {{downloadUrl}}
 Accept: application/json
 
 ###

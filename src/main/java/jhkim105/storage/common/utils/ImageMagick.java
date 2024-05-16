@@ -1,6 +1,6 @@
-package jhkim105.storage.utils;
+package jhkim105.storage.common.utils;
 
-import jhkim105.storage.config.SystemPropertiesConfig;
+import jhkim105.storage.common.config.SystemPropertiesConfig;
 import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.Getter;

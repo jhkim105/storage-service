@@ -1,6 +1,5 @@
-package jhkim105.storage.s3;
+package jhkim105.storage.service;
 
-import jhkim105.storage.StorageService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -38,7 +37,6 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 import software.amazon.awssdk.services.s3.model.UploadPartRequest;
 import software.amazon.awssdk.services.s3.model.UploadPartResponse;
 
-@Component
 @RequiredArgsConstructor
 @Slf4j
 public class S3Service implements StorageService {

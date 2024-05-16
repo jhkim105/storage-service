@@ -1,4 +1,4 @@
-package jhkim105.storage.utils;
+package jhkim105.storage.common.utils;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

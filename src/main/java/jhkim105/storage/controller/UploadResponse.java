@@ -1,4 +1,4 @@
-package jhkim105.storage;
+package jhkim105.storage.controller;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

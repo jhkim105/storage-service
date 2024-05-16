@@ -1,4 +1,4 @@
-package jhkim105.storage.utils;
+package jhkim105.storage.common.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,8 +1,8 @@
-package jhkim105.storage.utils;
+package jhkim105.storage.common.utils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import jhkim105.storage.utils.FileUtils;
+import jhkim105.storage.common.utils.FileUtils;
 import org.junit.jupiter.api.Test;
 
 class FileUtilsTest {
