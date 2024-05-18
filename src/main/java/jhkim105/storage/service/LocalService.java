@@ -1,22 +1,24 @@
 package jhkim105.storage.service;
 
 
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import jhkim105.storage.common.config.ServiceProperties;
 import jhkim105.storage.common.utils.FileUtils;
-import jhkim105.storage.common.utils.Gifsicle;
-import jhkim105.storage.common.utils.ImageMagick;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
-public class LocalService implements StorageService {
+@Slf4j
+public class LocalService extends StorageService {
 
   private final ServiceProperties serviceProperties;
   private final ResourceLoader resourceLoader;
@@ -48,37 +50,19 @@ public class LocalService implements StorageService {
     return key;
   }
 
-  private void resize(File file, int width, int height) {
-    String inputFilePath = file.getAbsolutePath();
-    String outputFilePath = file.getAbsolutePath() + ".tmp";
-    boolean resized = false;
-    boolean animated = ImageMagick.getImageInfo(inputFilePath).isAnimated();
-    // TODO: 원본이미지 사이즈 비교하여 resize 필요한 경우에만
-    if (animated && width > 0 &&  height > 0) {
-        Gifsicle.resize(inputFilePath, outputFilePath, width, height);
-        resized = true;
-    } else if (!animated) {
-      if (width == 0 || height == 0) {
-        ImageMagick.convert(inputFilePath, outputFilePath);
-      } else {
-        ImageMagick.resize(inputFilePath, outputFilePath, width, height);
-      }
-      resized = true;
-    }
-
-    if (resized) {
-      String originalPath = inputFilePath + ".original";
-      FileUtils.moveFile(inputFilePath, originalPath);
-      FileUtils.moveFile(outputFilePath, inputFilePath);
-      FileUtils.delete(originalPath);
-    }
-
+  @Override
+  protected String resize(String source, String target, int width, int height) {
+    return resizeFile(source, target, width, height);
   }
 
+  @Override
+  protected Resource getResource(String path) {
+    return resourceLoader.getResource(String.format("file://%s", path));
+  }
 
   @Override
-  public Resource load(String bucketName, String key) {
-    return new FileSystemResource(absoluteObjectPath(bucketName, key));
+  protected boolean existsObject(String absolutePath) {
+    return Paths.get(absolutePath).toFile().exists();
   }
 
   @Override
@@ -103,17 +87,40 @@ public class LocalService implements StorageService {
     bucketDir.delete();
   }
 
+
+  protected String objectPath(String bucketName, String key) {
+    return String.format("%s/%s", absoluteBucketPath(bucketName), key);
+  }
+
   private String absoluteBucketPath(String bucketName) {
     return String.format("%s/%s", serviceProperties.getStoragePath(), bucketName);
   }
 
-  private String absoluteObjectPath(String bucketName, String key) {
-    return String.format("%s/%s", absoluteBucketPath(bucketName), key);
+  @Override
+  public void deleteObject(String bucketName, String key) {
+    String path = objectPath(bucketName, key);
+    FileUtils.delete(path);
   }
 
   @Override
-  public void deleteObject(String bucketName, String key) {
-    String path = absoluteObjectPath(bucketName, key);
-    FileUtils.delete(path);
+  public void deleteResizedImages(String bucketName, String key) {
+    Path dirPath = Paths.get(objectPath(bucketName, key)).getParent();
+    String filenamePrefix = Paths.get(resizedImagePathPrefix(objectPath(bucketName, key))).getFileName().toString();
+
+    if (!Files.isDirectory(dirPath)) {
+      throw new RuntimeException(("Provided path is not a directory: " + dirPath));
+    }
+
+    try (DirectoryStream<Path> stream = Files.newDirectoryStream(dirPath, filenamePrefix + "*")) {
+      for (Path entry : stream) {
+        Files.delete(entry);
+        log.debug("Deleted: {}", entry);
+      }
+    } catch (IOException e) {
+      log.warn("Error deleting files with prefix: {}, {}", filenamePrefix, e.getMessage());
+    }
+
   }
+
+
 }

@@ -11,6 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "service")
 public class ServiceProperties {
   private String storagePath;
+//  private StorageType storageType;
   private String imageMagickPath;
   private String gifsiclePath;
 

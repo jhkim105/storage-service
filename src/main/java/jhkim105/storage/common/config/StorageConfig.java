@@ -14,13 +14,13 @@ import software.amazon.awssdk.services.s3.S3Client;
 public class StorageConfig {
 
   @Bean
-  @ConditionalOnProperty(name = "storage.type", havingValue = "LOCAL", matchIfMissing = true)
+  @ConditionalOnProperty(name = "service.storage-type", havingValue = "LOCAL")
   public StorageService localStorageService(ServiceProperties serviceProperties, ResourceLoader resourceLoader) {
     return new LocalService(serviceProperties, resourceLoader);
   }
 
   @Bean
-  @ConditionalOnProperty(name = "storage.type", havingValue = "S3")
+  @ConditionalOnProperty(name = "service.storage-type", havingValue = "S3")
   public StorageService s3StorageService(ResourceLoader resourceLoader, S3Client s3) {
     return new S3Service(resourceLoader, s3);
   }

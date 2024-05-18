@@ -55,12 +55,16 @@ public class StorageController {
   }
 
   @GetMapping("/{bucketName}/**")
-  public ResponseEntity<Resource> download(@PathVariable String bucketName,
-      HttpServletRequest request) {
-    String key = RequestUtils.extractPath(request);
-    Resource resource = storageService.load(bucketName, key);
+  public ResponseEntity<Resource> download(@PathVariable String bucketName, ResizeRequest resizeRequest, HttpServletRequest request) {
+    var key = RequestUtils.extractPath(request);
+    var resource = storageService.load(bucketName, key);
+    if(resizeRequest.hasValue()) {
+      resource = storageService.load(bucketName, key, resizeRequest.w(), resizeRequest.h());
+    } else {
+      resource = storageService.load(bucketName, key);
+    }
     return ResponseEntity.ok()
-        .header(HttpHeaders.CONTENT_TYPE, FileUtils.contentType(resource))
+        .header(HttpHeaders.CONTENT_TYPE, FileUtils.contentType(key))
         .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.inline()
             .filename(resource.getFilename())
             .build()
@@ -72,6 +76,7 @@ public class StorageController {
   public void deleteObject(@PathVariable String bucketName,
       HttpServletRequest request) {
     String key = RequestUtils.extractPath(request);
+    storageService.deleteResizedImages(bucketName, key);
     storageService.deleteObject(bucketName, key);
   }
 

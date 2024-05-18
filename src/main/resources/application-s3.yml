@@ -1,13 +1,4 @@
-server:
-  port: 8088
 spring:
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-  servlet:
-    multipart:
-      max-file-size: -1
-      max-request-size: -1
   cloud:
     aws:
       credentials:
@@ -15,7 +6,5 @@ spring:
       region:
         static: ap-northeast-2
 
-storage:
-  image-magick-path: /opt/homebrew/bin
-  gifsicle-path: /opt/homebrew/bin
+service:
   storage-type: S3

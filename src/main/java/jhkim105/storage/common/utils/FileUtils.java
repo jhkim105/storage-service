@@ -86,11 +86,7 @@ public class FileUtils {
   }
 
   public static String contentType(Resource resource) {
-    try {
-      return contentType(resource.getFile().toPath());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    return contentType(resource.getFilename());
   }
 
   public static String contentType(Path path) {
